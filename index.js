@@ -3,6 +3,7 @@ import cors from 'cors'
 import mongoose from "mongoose"
 import 'dotenv/config'
 import userRoute from './Users/userRoutes.js'
+import classRoute from './Classes/classRoutes.js'
 const port = 2000
 const app = express()
 app.use(cors({
@@ -16,6 +17,7 @@ async function Run() {
     try {
         await mongoose.connect(`mongodb+srv://${process.env.DB_user}:${process.env.DB_pass}@cluster0.oqk84kq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`);
         app.use('/', userRoute)
+        app.use('/', classRoute)
         console.log("mongoose connected");
     }
     catch {
