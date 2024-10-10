@@ -9,13 +9,13 @@ route.post('/classes', async (req, res) => {
     const checkClasses = await classSchema.find(query)
     const checkDate = await classSchema.find(queryDate)
     console.log(checkDate.length);
-    
+
     if (checkClasses.length > 0) {
-        res.send({ message: "Already class create for this trainer on this time" })
+        res.status(400).json({ message: "Already class create for this trainer on this time" })
     }
     else {
         if (checkDate.length >= 5) {
-            res.send({ message: "You already create 5 classes on this date" })
+            res.status(400).json({message: "You already create 5 classes on this date" })
         }
         else {
             const result = await classSchema.insertMany(data)
