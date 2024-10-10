@@ -13,15 +13,21 @@ route.post('/users', async (req, res) => {
 route.get("/users", async (req, res) => {
     const data = req.query
     const query = { "role": data.data }
-    if (query) {
+    if (query.role) {
         const result = await userSchema.find(query)
         res.send(result)
-
     }
     else {
         const result = await userSchema.find()
         res.send(result)
     }
+})
+
+route.get('/user/:email', async(req,res)=>{
+    const email = req.params.email
+    const query =  { "email": email }
+    const result = await userSchema.findOne(query)
+    res.send(result)
 })
 
 
