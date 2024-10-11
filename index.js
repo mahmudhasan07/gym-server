@@ -4,13 +4,14 @@ import mongoose from "mongoose"
 import 'dotenv/config'
 import userRoute from './Users/userRoutes.js'
 import classRoute from './Classes/classRoutes.js'
+import cookieParser  from "cookie-parser"
 const port = 2000
 const app = express()
 app.use(cors({
     origin: ['http://localhost:3000'],
     credentials: true
-
 }))
+app.use(cookieParser())
 app.use(express.json())
 
 async function Run() {

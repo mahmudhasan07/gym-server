@@ -1,5 +1,6 @@
 import express from 'express'
 import classSchema from './classSchema.js'
+import VerifyToken from '../VerfyToken/VerifyToken.js'
 const route = express.Router()
 
 route.post('/classes', async (req, res) => {
@@ -23,9 +24,19 @@ route.post('/classes', async (req, res) => {
     }
 })
 
-route.get('/classes', async (req, res) => {
+route.get('/classes', VerifyToken, async (req, res) => {
     const result = await classSchema.find().populate('trainerId').sort({ classDate: 1 })
     res.send(result)
+})
+
+
+route.get('/class/:trainer', async (req, res) => {
+    const trainer = req.params.trainer
+    const query = {trainerId :  trainer }
+    const result = await classSchema.find(query)
+    res.send(result)
+
+
 })
 
 route.patch("/classes/:classId", async (req, res) => {
@@ -40,7 +51,7 @@ route.patch("/classes/:classId", async (req, res) => {
     }
     else {
         if (queryDate.booking.length >= 10) {
-            res.status(400).send({ message: "This class is full" })
+            res.status(400).send({ message: "Class schedule is full. Maximum 10 trainees allowed per schedule" })
         }
         else {
             const update = {
@@ -53,7 +64,7 @@ route.patch("/classes/:classId", async (req, res) => {
     }
 })
 
-route.patch('/cancelclass/:classId' , async(req,res)=>{
+route.patch('/cancelclass/:classId', async (req, res) => {
     const id = req.params.classId
     const bookId = req.body.userId
     const query = { _id: id }
