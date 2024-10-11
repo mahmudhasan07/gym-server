@@ -43,7 +43,7 @@ route.get('/classes', VerifyToken, async (req, res) => {
 route.get('/class/:trainer',VerifyToken, async (req, res) => {
     const trainer = req.params.trainer
     const query = {trainerId :  trainer }
-    const result = await classSchema.find(query)
+    const result = await classSchema.find(query).sort({ classDate: -1 })
     res.send(result)
 
 
