@@ -28,16 +28,9 @@ route.get("/users", async (req, res) => {
 route.get('/user/:email', async (req, res) => {
     const email = req.params.email
     const query = { "email": email }
-    if (req.user.email == email) {
-        const result = await userSchema.findOne(query)
-        res.send(result)
-    }
-    else{
-        res.status(403).send({
-            "success": false,
-            "message": "Unauthorized access.",
-        })
-    }
+    const result = await userSchema.findOne(query)
+    res.send(result)
+
 
 })
 
