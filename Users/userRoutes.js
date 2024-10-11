@@ -30,12 +30,10 @@ route.get('/user/:email', async (req, res) => {
     const query = { "email": email }
     const result = await userSchema.findOne(query)
     res.send(result)
-
-
 })
 
 
-route.patch('/update/:email', async (req, res) => {
+route.patch('/update/:email', VerifyToken, async (req, res) => {
     const email = req.params.email
     const data = req.body
     const query = { email: email }

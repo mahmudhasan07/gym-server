@@ -3,24 +3,34 @@ import classSchema from './classSchema.js'
 import VerifyToken from '../VerfyToken/VerifyToken.js'
 const route = express.Router()
 
-route.post('/classes', async (req, res) => {
+route.post('/classes', VerifyToken, async (req, res) => {
     const data = req.body
     const query = { $and: [{ startTime: { $lt: data.endTime } }, { endTime: { $gt: data.startTime } }, { trainerId: data.trainerId }] }
     const queryDate = { classDate: data?.classDate }
     const checkClasses = await classSchema.find(query)
     const checkDate = await classSchema.find(queryDate)
-    if (checkClasses.length > 0) {
-        res.status(400).json({ message: "Already class create for this trainer on this time" })
-    }
-    else {
-        if (checkDate.length >= 5) {
-            res.status(400).json({ message: "You already create 5 classes on this date" })
+    if (req.user.email == "mahmudhasan@gmail.com") {
+        if (checkClasses.length > 0) {
+            res.status(400).json({ message: "Already class create for this trainer on this time" })
         }
         else {
-            const result = await classSchema.insertMany(data)
-            res.send(result)
+            if (checkDate.length >= 5) {
+                res.status(400).json({ message: "You already create 5 classes on this date" })
+            }
+            else {
+                const result = await classSchema.insertMany(data)
+                res.send(result)
+            }
+    
         }
-
+    }
+    else{
+        res.status(403).send({
+            "success": false,
+            "message": "Unauthorized access.",
+            "errorDetails": "You must be an admin to perform this action."
+            }
+            )
     }
 })
 
@@ -30,7 +40,7 @@ route.get('/classes', VerifyToken, async (req, res) => {
 })
 
 
-route.get('/class/:trainer', async (req, res) => {
+route.get('/class/:trainer',VerifyToken, async (req, res) => {
     const trainer = req.params.trainer
     const query = {trainerId :  trainer }
     const result = await classSchema.find(query)
@@ -39,7 +49,7 @@ route.get('/class/:trainer', async (req, res) => {
 
 })
 
-route.patch("/classes/:classId", async (req, res) => {
+route.patch("/classes/:classId",VerifyToken, async (req, res) => {
     const id = req.params.classId
     const bookId = req.body.userId
     const query = { _id: id }
@@ -64,7 +74,7 @@ route.patch("/classes/:classId", async (req, res) => {
     }
 })
 
-route.patch('/cancelclass/:classId', async (req, res) => {
+route.patch('/cancelclass/:classId',VerifyToken, async (req, res) => {
     const id = req.params.classId
     const bookId = req.body.userId
     const query = { _id: id }
