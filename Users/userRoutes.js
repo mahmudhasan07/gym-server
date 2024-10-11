@@ -64,4 +64,13 @@ route.post("/jwt", async (req, res) => {
 
 })
 
+
+route.delete('/delete/:email', async (req, res) => {
+    const email = req.params.email
+    const query = { email: email }
+    const result = await userSchema.deleteOne(query)
+    
+    res.send(result)
+})
+
 export default route
