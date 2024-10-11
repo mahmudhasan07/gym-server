@@ -35,7 +35,7 @@ route.post('/classes', VerifyToken, async (req, res) => {
 })
 
 route.get('/classes', VerifyToken, async (req, res) => {
-    const result = await classSchema.find().populate('trainerId').sort({ classDate: 1 })
+    const result = await classSchema.find().populate('trainerId').sort({ classDate: -1 })
     res.send(result)
 })
 
