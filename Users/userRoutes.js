@@ -25,7 +25,7 @@ route.get("/users", async (req, res) => {
     }
 })
 
-route.get('/user/:email', VerifyToken, async (req, res) => {
+route.get('/user/:email', async (req, res) => {
     const email = req.params.email
     const query = { "email": email }
     if (req.user.email == email) {
